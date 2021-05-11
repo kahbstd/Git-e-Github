@@ -1,0 +1,200 @@
+Todos os comandos realizado dentro do GIT BASH
+
+Configurando Git / Github
+
+$ git config --global user.name "Carla"
+
+$ git config --global user.email "carla.bastida@hotmail.com"
+
+
+
+Iniciando o Repositório (local)
+
+$ mkdir MeuApp (mkdir cria a pasta e na sequencia coloque o nome da pasta)
+
+$ cd MeuApp (cd abre a pasta a ser informada da sequencia)
+
+$ git init (inicia o repositorio -vazio- e fica olhando as mudanças no projeto)
+
+$ ls -la (vai fornecer mais informações sobre o repositório)
+
+$ cd .. (volta a pasta anterior)
+
+
+Criando e Enviando arquivos p/ seu repositório no Github (remoto)
+
+$ git init
+
+$ cd MeuApp
+
+	Adicionando uma origin
+	git remote add origin git@github.com:kahbstd/Flutter-Projects.git (SSH)
+OU
+	git remote add origin https://github.com/kahbstd/Flutter-Projects.git (HTTP)
+
+	Se uma origin foi definida em SSH e você deseja mudar para HTTP
+	$ git remote set-url origin https://github.com/kahbstd/Flutter-Projects.git
+
+	Enviando alterações para o Github
+	$ git status (vai mostrar os seus untracked files (não monitorados) daquela pasta)
+
+	$ git add (nome da pasta ou arquivo.formato)
+	
+	$ git status (vai mostrar arquivos na Branch que ainda não foram comitados)
+	$ git commit -m "se desejar colocar uma mensagem, senão escreva somente até commit"
+
+	Enviando para o repositório remoto
+	$ git push -u origin master 
+
+
+
+
+Criando Chave SSH (protocolo que serve para identificar um usuário remoto a um servidor)
+	baseado em chaves onde existe uma chave publica e uma chave privada
+	a chave privada (na nossa máquina) abre a chave pública (servidor do github)
+
+*gerando a chave SSH
+
+seguir comandos do link: https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+Atenção: o email do link precisa ser o mesmo e-mail da conta do github
+
+após feito isso, para acessar as chaves SSH:
+
+$ cd ~/.ssh/
+$ ls
+
+após esses 2 comandos vai aparecer uma lista com as chaves
+exemplo:
+id_rsa
+id_rsa.pub
+
+para pegar a chave é necessário dar o comando:
+$ cat id_rsa.pub
+OU
+$ more id_rsa.pub
+
+após isso, é necessário configurar no browser, dentro do sua conta github:
+Acesse em configurações o campo "SSH and GPG keys" >> criar uma nova chave >> colocar a chave
+na parte do título uma boa prática é colocar o nome da máquina >> add SSH Key
+
+após isso é possível fazer o push sem dar erro de permissão
+
+
+
+Enviando mudanças para o repositório remoto
+$ git commit -am "mensagem que deseja colocar"
+$ git push origin master //sendo master o branch que eu estou
+
+
+
+Como visualizar logs
+$ git log // mostra o log completo
+
+$ git shortlog //mostra de maneira mais concisa
+
+$ git shortlog -sn //mostra todos os autores e a quantidade de commits que eles fizeram
+
+$ git log --author="Carla" //vai listar todos os commits feitos pelo autor Carla
+
+$ git log --graph //mostra em forma gráfica o que está acontecendo com os branchs e as versoes
+
+todo commit tem uma Hash que é um identificador do commit realizado, se dermos o comando:
+$ git show (colocar a Hash) //vai mostrar o commit com detalhes
+
+
+
+Visualizando a diferença entre as versões
+$ git diff // mostra tudo o que foi adicionado ou retirado na ultima versão
+
+$ git diff --name-only //mostra apenas os arquivos que foram modificados
+
+$ git commit -am "mensagem do commit" //utilizado para fazer commit de arquivo que já existiu
+
+
+
+Desfazendo as coisas com reset (altera o histórico do commit)
+
+*se eu acabei de modificar o arquivo e vi que está errado
+$ git checkout (nome do arquivo) //vai retornar o arquivo para antes da modificação
+
+*para retirar o arquivo do status onde está
+$ git reset HEAD (nome do arquivo)
+
+*alterar após comitado
+$ git reset --soft (colocar a Hash anterior ao commit que deseja alterar) //arquivo retorna ao status de unstaged
+
+$ git reset --mixed (colocar a Hash anterior ao commit que deseja alterar) //arquivo volta ao status de modified
+
+$ git reset --hard (colocar a Hash anterior ao commit que deseja alterar) //retira absolutadomente tudo o que foi feito no commit
+
+
+
+
+FORK: pega um projeto que não é seu e faz uma cópia dele para você
+(depois que você fizer as modificações é só mandar pull request para o autor original)
+
+
+
+Clone: Eu só consigo modificar meus próprios repositórios e depois quero mandar essas 
+modificações para o github. Se eu não for dona do repositório posso até clonar mas não
+conseguirei enviar depois.
+
+$ g clone git@github.com:kahbstd/Flutter-Projects.git Flutter-Projects-clone
+sendo "Flutter-Projects-clone" o nome da pasta onde ele vai copiar o projeto
+
+
+
+O que é o Branch: é um ponteiro móvel que leva a um commit.
+
+Cada vez que criamos um repositório cria-se automaticamente um branch master e a cada commit
+que eu dou é criada uma Hash e uma captura do que foi feito, o branch master segue o commit
+mais recente. 
+
+Posso criar um branch a parte para um mesmo commit ou outro, sem interferir com o branch master.
+
+
+- permite modificar algo sem alterar o locar principal (master), exemplo, correção de bug
+enquanto outras pessoas trabalham no mesmo arquivo.
+
+- facilmente desligável, posso criar e apagar branches com facilidade.
+
+- várias pessoas trabalhando em branches diferentes.
+
+- evita conflitos.
+
+
+
+
+Criando um Branch / mudando / deletando e unindo branchs
+
+$ git checkout -b (nome do branch) //ele cria o novo branch e já entra nele
+
+$ git branch ele mostra quais os branchs existentes e o com asterisco mostra qual deles você está no momento.
+
+Se estou no branch testing e quero ir para o master, é só dar o comando:
+$ git checkout master
+
+Se eu quiser apagar um branch que não vou mais utilizar:
+$ git branch -D testing //vai apagar o branch testing
+
+Unindo branchs - passo a passo MERGE
+	toda vez que damos um MERGE ele vai juntar todas as alterações realizadas nos commits
+e branchs separados e vai unir em 1 único commit.
+
+Prós:
+- operação não destrutiva: não destroi o historico, não vai mexer no commit.
+Contras:
+- cria um commit extra e que não reproduz nenhuma real alteração e polui o histórico.
+
+Unindo Branchs - passo a passo REBASE
+	o rebase vai pegar o commit e mover o sistema de arvore para deixar em forma linear, colocando
+no inicio da fila, de forma que todos os branchs ao final apontem para o mesmo commit.
+
+Prós:
+- evita commits extras / Histórico linear
+Contra:
+- perda da ordem cronológica, pois mesmo quem foi feito depois vai para o início da fila.
+Se alguem for tentar subir sua versão não vai conseguir pois vai dar conflito por perda
+da ordem cronológica.  
+
